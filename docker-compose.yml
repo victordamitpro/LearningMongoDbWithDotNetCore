@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  electricdb:
+        image: mongo
+  electric.api:
+    image: ${DOCKER_REGISTRY-}electricapi
+    build:
+      context: .
+      dockerfile: src/Server/Electric.API/Dockerfile
+
+  electricwebapp:
+    image: ${DOCKER_REGISTRY-}electricwebapp
+    build:
+      context: .
+      dockerfile: src/Client/ElectricWebApp/Dockerfile
+

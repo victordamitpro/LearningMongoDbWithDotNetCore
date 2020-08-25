@@ -1,0 +1,34 @@
+version: '3.4'
+
+services:
+  electricdb:
+        container_name: electricdb
+        restart: always
+        volumes:
+            - ${WEBAPP_STORAGE_HOME}/site:/data/db
+            #- ./data:/data/db
+        ports:
+            - "27017:27017"
+  electricwebapp:
+    container_name: electricwebapp
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ApiSettings:BaseAddress=electricapi"
+    depends_on:
+      - electric.api
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    ports:
+      - "8502:80"
+
+  electric.api:
+    container_name: electricapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "MongoDbSetting:ConnectionString=mongodb://electricdb:27017"
+    depends_on:
+      - electricdb
+    ports:
+      - "8501:80"
+

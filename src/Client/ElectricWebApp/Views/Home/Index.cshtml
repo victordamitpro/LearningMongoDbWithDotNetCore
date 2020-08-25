@@ -1,0 +1,56 @@
+﻿@model ElectricWebApp.Models.HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <div class="row" style="display:block; margin: 10px;float:left">
+        <button class="btn-info" onclick="@("window.location.href='" + @Url.Action("", "Device") + "'");">Add New</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-striped table-hover sortable">
+            @if (Model.Devices.Count() == 0)
+            {
+                <tr>
+                    <td colspan="8">No Record's found.</td>
+                </tr>
+
+            }
+            else
+            {
+                <thead>
+                    <tr class="danger">
+                        <th data-defaultsign="_19">ID</th>
+                        <th data-defaultsign="AZ">Seria Number</th>
+                        <th data-defaultsign="AZ">Firmware Version</th>
+                        <th data-defaultsign="month">State</th>
+                        <th data-firstsort="desc">Type</th>
+                        <th data-firstsort="desc">IP</th>
+                        <th data-firstsort="desc">Port</th>
+                        <th data-firstsort="desc"></th>
+
+                    </tr>
+                </thead>
+
+                foreach (var item in Model.Devices)
+                {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.SeriaNumber</td>
+            <td>@item.FirmwareVersion</td>
+            <td>@item.State</td>
+            <td>@item.TypeName</td>
+            <td>@item.GateWay.IP</td>
+            <td>@item.GateWay.PortTitle</td>
+            <td>
+                <button class="btn-primary" style="margin-right: 10px" onclick="@("window.location.href='" + @Url.Action("", "Device", new {id = @item.Id}) + "'");">Edit</button>
+                <button class="btn-danger" onclick="@("window.location.href='" + @Url.Action("Delete", "Device", new {id = @item.Id}) + "'");">Delete</button>
+            </td>
+        </tr>
+
+                }
+            }
+        </table>
+    </div>
+</div>
