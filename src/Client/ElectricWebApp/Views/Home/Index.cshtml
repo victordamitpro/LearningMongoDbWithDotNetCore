@@ -41,11 +41,11 @@
             <td>@item.FirmwareVersion</td>
             <td>@item.State</td>
             <td>@item.TypeName</td>
-            <td>@item.GateWay.IP</td>
-            <td>@item.GateWay.PortTitle</td>
+            <td>@item.IP</td>
+            <td>@item.PortTitle</td>
             <td>
-                <button class="btn-primary" style="margin-right: 10px" onclick="@("window.location.href='" + @Url.Action("", "Device", new {id = @item.Id}) + "'");">Edit</button>
-                <button class="btn-danger" onclick="@("window.location.href='" + @Url.Action("Delete", "Device", new {id = @item.Id}) + "'");">Delete</button>
+                <button class="btn-primary" style="margin-right: 10px" onclick="@("window.location.href='" + @Url.Action("", "Device", new {id = @item.Id, type = item.Type}) + "'");">Edit</button>
+                <button class="btn-danger" onclick="@("window.location.href='" + @Url.Action("Delete", "Device", new {id = @item.Id, type = item.Type}) + "'");">Delete</button>
             </td>
         </tr>
 

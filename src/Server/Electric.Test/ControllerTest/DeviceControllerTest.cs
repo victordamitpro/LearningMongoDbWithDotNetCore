@@ -29,11 +29,11 @@ namespace Electric.Test.ControllerTest
         {
             // Arrange
             mockMediator
-             .Setup(m => m.Send(It.IsAny<CreateDeviceCommand>(), It.IsAny<CancellationToken>()))
+             .Setup(m => m.Send(It.IsAny<CreateElectricMetterCommand>(), It.IsAny<CancellationToken>()))
              .ReturnsAsync(new Response<string> { });
-            var deviceController = new DeviceController(mockMediator.Object, mockElectricQuery.Object);
+            var deviceController = new ElectricController(mockMediator.Object, mockElectricQuery.Object);
             // Act
-            var actionResult = await deviceController.CreateDevice( new CreateDeviceCommand());
+            var actionResult = await deviceController.CreateDevice( new CreateElectricMetterCommand());
             // Assert
             Assert.Equal((actionResult as OkObjectResult).StatusCode, (int)System.Net.HttpStatusCode.OK);
         }
@@ -43,7 +43,7 @@ namespace Electric.Test.ControllerTest
         {
             // Arrange
             mockElectricQuery.Setup(e => e.GetAlls()).Returns(Task.FromResult(new List<DeviceResponse> { }.AsEnumerable()));
-            var deviceController = new DeviceController(mockMediator.Object, mockElectricQuery.Object);
+            var deviceController = new ElectricController(mockMediator.Object, mockElectricQuery.Object);
             // Act
             var actionResult = await deviceController.GetAll();
             // Assert
@@ -55,7 +55,7 @@ namespace Electric.Test.ControllerTest
         {
             // Arrange
             mockElectricQuery.Setup(e => e.GetAlls()).Returns(Task.FromResult(new List<DeviceResponse>().AsEnumerable()));
-            var deviceController = new DeviceController(mockMediator.Object, mockElectricQuery.Object);
+            var deviceController = new ElectricController(mockMediator.Object, mockElectricQuery.Object);
             // Act
             var actionResult = await deviceController.GetAll();
             // Assert
@@ -67,8 +67,8 @@ namespace Electric.Test.ControllerTest
         {
             // Arrange
             string id = string.Empty;
-            mockElectricQuery.Setup(e => e.GetDetail(id)).Returns(Task.FromResult(new DeviceResponse()));
-            var deviceController = new DeviceController(mockMediator.Object, mockElectricQuery.Object);
+            mockElectricQuery.Setup(e => e.GetDetailElectric(id)).Returns(Task.FromResult(new DeviceResponse()));
+            var deviceController = new ElectricController(mockMediator.Object, mockElectricQuery.Object);
             // Act
             var actionResult = await deviceController.GetDetail(id);
             // Assert
@@ -80,7 +80,7 @@ namespace Electric.Test.ControllerTest
         {
             // Arrange
             string id = string.Empty;
-            var deviceController = new DeviceController(mockMediator.Object, mockElectricQuery.Object);
+            var deviceController = new ElectricController(mockMediator.Object, mockElectricQuery.Object);
             // Act
             var actionResult = await deviceController.GetDetail(id);
             // Assert

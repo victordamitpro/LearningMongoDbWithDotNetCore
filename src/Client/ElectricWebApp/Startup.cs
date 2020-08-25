@@ -27,7 +27,9 @@ namespace ElectricWebApp
 
             services.AddSingleton<IApiSettings>(sp => sp.GetRequiredService<IOptions<ApiSettings>>().Value);
             services.AddHttpClient();
-            services.AddTransient<IDeviceService, DeviceService>();
+            services.AddTransient<IElectricService, ElectricService>();
+            services.AddTransient<IGateWayService, GateWayService>();
+            services.AddTransient<IWaterService, WaterService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using CommonShare.Enums;
 using Electric.Application.Commands;
 using Electric.Application.Responses;
 using Electric.Core.Entities;
-using GateWay = Electric.Core.Entities.GateWay;
 
 namespace Electric.Application.Mappers
 {
@@ -11,13 +11,27 @@ namespace Electric.Application.Mappers
         public DeviceMappingProfile()
         {
             // Respone
-            CreateMap<Device, DeviceResponse>().ReverseMap();
-            CreateMap<GateWay, GateWayResponse>().ReverseMap();
+            CreateMap<ElectricMetter, DeviceResponse>()
+                .ForMember(vm => vm.Type, m => m.MapFrom(u => (int)ElectricType.Electric))
+                .ReverseMap();
+            CreateMap<WaterMetter, DeviceResponse>()
+                 .ForMember(vm => vm.Type, m => m.MapFrom(u => (int)ElectricType.Water))
+                .ReverseMap();
+            CreateMap<GateWay, DeviceResponse>()
+                .ForMember(vm => vm.Type, m => m.MapFrom(u => (int)ElectricType.GateWay))
+                .ReverseMap();
+
             // Request
-            CreateMap<Device, CreateDeviceCommand>().ReverseMap();
-            CreateMap<Device, UpdateDeviceCommand>().ReverseMap();
+            CreateMap<ElectricMetter, CreateElectricMetterCommand>().ReverseMap();
+            CreateMap<ElectricMetter, UpdateElectricMetterCommand>().ReverseMap();
+
+            CreateMap<WaterMetter, CreateWaterMetterCommand>().ReverseMap();
+            CreateMap<WaterMetter, UpdateWaterMetterCommand>().ReverseMap();
+
+            CreateMap<GateWay, CreateGateWayCommand>().ReverseMap();
+            CreateMap<GateWay, UpdateGateWayCommand>().ReverseMap();
             // Map nested command
-            CreateMap<GateWay, GateWayCommand>().ReverseMap();
+            //CreateMap<GateWay, GateWayCommand>().ReverseMap();
         }
     }
 }

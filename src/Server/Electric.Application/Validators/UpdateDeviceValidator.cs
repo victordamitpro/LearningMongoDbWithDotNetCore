@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Electric.Application.Validators
 {
-    public class UpdateDeviceValidator : AbstractValidator<UpdateDeviceCommand>
+    public class UpdateDeviceValidator : AbstractValidator<UpdateElectricMetterCommand>
     {
         public UpdateDeviceValidator()
         {

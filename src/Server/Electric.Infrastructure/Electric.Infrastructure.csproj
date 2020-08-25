@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Electric.Core\Electric.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Interfaces\" />
+  </ItemGroup>
+
 </Project>

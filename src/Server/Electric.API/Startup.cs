@@ -8,8 +8,6 @@ using Electric.Application.Queries;
 using Electric.Application.Validators;
 using Electric.Core.DbSettings;
 using Electric.Core.Repositories;
-using Electric.Infrastructure.Data;
-using Electric.Infrastructure.Data.Interfaces;
 using Electric.Infrastructure.Repository;
 using FluentValidation;
 using MediatR;
@@ -60,21 +58,20 @@ namespace Electric.API
             services.AddAutoMapper(typeof(Startup));
 
             // Add Repository
-            services.AddTransient<IDeviceRepository, DeviceRepository>();
-            services.AddTransient<IElectricContext, ElectricContext>();
+            services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             services.AddTransient<IDeviceQuery, DeviceQuery>();
 
             // Add MediatR
-            services.AddMediatR(typeof(CreateDeviceHandler).GetTypeInfo().Assembly);
-            services.AddMediatR(typeof(UpdateDeviceHandler).GetTypeInfo().Assembly);
-            services.AddMediatR(typeof(DeleteDeviceHandler).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(CreateGateWayHandler).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(UpdateGateWayHandler).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(DeleteGateWayHandler).GetTypeInfo().Assembly);
 
 
             // Validators
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-            services.AddTransient<IValidator<CreateDeviceCommand>, CreateDeviceValidator>();
-            services.AddTransient<IValidator<UpdateDeviceCommand>, UpdateDeviceValidator>();
-            services.AddTransient<IValidator<DeleteDeviceCommand>, DeleteDeviceValidator>();
+            services.AddTransient<IValidator<CreateElectricMetterCommand>, CreateDeviceValidator>();
+            services.AddTransient<IValidator<UpdateElectricMetterCommand>, UpdateDeviceValidator>();
+            services.AddTransient<IValidator<DeleteElectricMetterCommand>, DeleteDeviceValidator>();
             #region Swagger DI
 
             services.AddSwaggerGen(c =>

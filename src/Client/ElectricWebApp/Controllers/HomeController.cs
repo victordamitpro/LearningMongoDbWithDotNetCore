@@ -10,9 +10,9 @@ namespace ElectricWebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IDeviceService _service;
+        private readonly IElectricService _service;
 
-        public HomeController(ILogger<HomeController> logger, IDeviceService gateWayService)
+        public HomeController(ILogger<HomeController> logger, IElectricService gateWayService)
         {
             _logger = logger;
             _service = gateWayService;

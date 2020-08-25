@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Share\CommonShare\CommonShare.csproj" />
     <ProjectReference Include="..\Electric.Core\Electric.Core.csproj" />
+    <ProjectReference Include="..\Electric.Infrastructure\Electric.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

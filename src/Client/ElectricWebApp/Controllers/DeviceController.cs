@@ -8,18 +8,35 @@ namespace ElectricWebApp.Controllers
 {
     public class DeviceController : Controller
     {
-        private readonly IDeviceService _electricService;
+        private readonly IElectricService _electricService;
+        private readonly IGateWayService _gateWayService;
+        private readonly IWaterService _waterService;
 
-        public DeviceController(IDeviceService electricService)
+        public DeviceController(IElectricService electricService, IGateWayService gateWayService, IWaterService waterService)
         {
             _electricService = electricService;
+            _gateWayService = gateWayService;
+            _waterService = waterService;
         }
-        public async Task<ActionResult> Index(string id)
+        public async Task<ActionResult> Index(string id, int type)
         {
-            var result = new DeviceViewModel { Type = 1 };
+            var result = new DeviceViewModel { Type = (int)ElectricType.Electric };
+
             if (!string.IsNullOrEmpty(id))
             {
-                result = await _electricService.GetDetail(id);
+                if (type == (int)ElectricType.Electric)
+                {
+                    result = await _electricService.GetDetail(id);
+                }
+                else if (type == (int)ElectricType.Water)
+                {
+                    result = await _waterService.GetDetail(id);
+                }
+                else if (type == (int)ElectricType.GateWay)
+                {
+                    result = await _gateWayService.GetDetail(id);
+                }
+                
                 return View("Edit", result);
             }
             return View("Index", result);
@@ -30,41 +47,116 @@ namespace ElectricWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(viewModel.Type != (int)ElectricType.GateWay)
+                if(viewModel.Type == (int)ElectricType.Electric)
                 {
-                    var newDevice = new DeviceViewModel
-                    {
-                        SeriaNumber = viewModel.SeriaNumber,
-                        FirmwareVersion = viewModel.FirmwareVersion,
-                        State = viewModel.State,
-                        Type = viewModel.Type,
-                    };
-
-                    var response = await _electricService.Create(newDevice);
-
-                    return RedirectToPage(response);
+                    return await CreateElectricMetter(viewModel);
                 }
-                else
+                else if(viewModel.Type == (int)ElectricType.Water)
                 {
-                    var newGateWay = new DeviceViewModel
-                    {
-                        SeriaNumber = viewModel.SeriaNumber,
-                        FirmwareVersion = viewModel.FirmwareVersion,
-                        State = viewModel.State,
-                        Type = viewModel.Type,
-                        GateWay = new GateWayViewModel{
-                            Port = viewModel.GateWay.Port,
-                            IP = viewModel.GateWay.IP
-                        }
-                    };
-
-                    var response = await _electricService.Create(newGateWay);
-
-                    return RedirectToPage(response);
+                    return await CreateWaterMetter(viewModel);
+                }
+                else if (viewModel.Type == (int)ElectricType.GateWay)
+                {
+                    return await CreateGateWayMetter(viewModel);
                 }
             }
 
             return View("Error");
+        }
+
+        public async Task<ActionResult> CreateElectricMetter(DeviceViewModel viewModel)
+        {
+            var newDevice = new DeviceViewModel
+            {
+                SeriaNumber = viewModel.SeriaNumber,
+                FirmwareVersion = viewModel.FirmwareVersion,
+                State = viewModel.State,
+                Type = viewModel.Type,
+            };
+
+            var response = await _electricService.Create(newDevice);
+
+            return RedirectToPage(response);
+        }
+
+        public async Task<ActionResult> UpdateElectricMetter(DeviceViewModel viewModel)
+        {
+            var newDevice = new DeviceViewModel
+            {
+                Id = viewModel.Id,
+                SeriaNumber = viewModel.SeriaNumber,
+                FirmwareVersion = viewModel.FirmwareVersion,
+                State = viewModel.State,
+                Type = viewModel.Type,
+            };
+
+            await _electricService.Edit(newDevice);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<ActionResult> UpdateWaterMetter(DeviceViewModel viewModel)
+        {
+            var newDevice = new DeviceViewModel
+            {
+                Id = viewModel.Id,
+                SeriaNumber = viewModel.SeriaNumber,
+                FirmwareVersion = viewModel.FirmwareVersion,
+                State = viewModel.State,
+                Type = viewModel.Type,
+            };
+
+            await _waterService.Edit(newDevice);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<ActionResult> UpdateGateWay(DeviceViewModel viewModel)
+        {
+            var newDevice = new DeviceViewModel
+            {
+                Id = viewModel.Id,
+                SeriaNumber = viewModel.SeriaNumber,
+                FirmwareVersion = viewModel.FirmwareVersion,
+                State = viewModel.State,
+                Type = viewModel.Type,
+                Port = viewModel.Port,
+                IP = viewModel.IP
+            };
+
+            await _gateWayService.Edit(newDevice);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<ActionResult> CreateWaterMetter(DeviceViewModel viewModel)
+        {
+            var newDevice = new DeviceViewModel
+            {
+                SeriaNumber = viewModel.SeriaNumber,
+                FirmwareVersion = viewModel.FirmwareVersion,
+                State = viewModel.State,
+                Type = viewModel.Type,
+            };
+
+            var response = await _waterService.Create(newDevice);
+
+            return RedirectToPage(response);
+        }
+
+        public async Task<ActionResult> CreateGateWayMetter(DeviceViewModel viewModel)
+        {
+            var newDevice = new DeviceViewModel
+            {
+                SeriaNumber = viewModel.SeriaNumber,
+                FirmwareVersion = viewModel.FirmwareVersion,
+                State = viewModel.State,
+                Type = viewModel.Type,
+            };
+
+            var response = await _gateWayService.Create(newDevice);
+
+            return RedirectToPage(response);
         }
 
         private ActionResult RedirectToPage(ResponseDataModel<string> response)
@@ -87,36 +179,17 @@ namespace ElectricWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(viewModel.Type != (int)ElectricType.GateWay)
+                if(viewModel.Type == (int)ElectricType.Electric)
                 {
-                    var updateDevice = new DeviceViewModel
-                    {
-                        Id = viewModel.Id,
-                        SeriaNumber = viewModel.SeriaNumber,
-                        FirmwareVersion = viewModel.FirmwareVersion,
-                        State = viewModel.State,
-                        Type = viewModel.Type,
-                    };
-
-                    await _electricService.Edit(updateDevice);
+                    return await UpdateElectricMetter(viewModel);
                 }
-                else
+                else if(viewModel.Type == (int)ElectricType.Water)
                 {
-                    var updateGateWay = new DeviceViewModel
-                    {
-                        Id = viewModel.Id,
-                        SeriaNumber = viewModel.SeriaNumber,
-                        FirmwareVersion = viewModel.FirmwareVersion,
-                        State = viewModel.State,
-                        Type = viewModel.Type,
-                        GateWay = new GateWayViewModel
-                        {
-                            Port = viewModel.GateWay.Port,
-                            IP = viewModel.GateWay.IP
-                        }
-                    };
-
-                    await _electricService.Edit(updateGateWay);
+                    return await UpdateWaterMetter(viewModel);
+                }
+                else if (viewModel.Type == (int)ElectricType.GateWay)
+                {
+                    return await UpdateGateWay(viewModel);
                 }
 
                 return RedirectToAction("Index", "Home");
@@ -125,11 +198,23 @@ namespace ElectricWebApp.Controllers
             return View("Error");
         }
 
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> Delete(string id,int type)
         {
             if (!string.IsNullOrEmpty(id))
             {
-                await _electricService.Delete(id);
+                if (type == (int)ElectricType.Electric)
+                {
+                    await _electricService.Delete(id);
+                }
+                else if (type == (int)ElectricType.Water)
+                {
+                    await _waterService.Delete(id);
+                }
+                else if (type == (int)ElectricType.GateWay)
+                {
+                    await _gateWayService.Delete(id);
+                }
+                
 
                 return RedirectToAction("Index", "Home");
             }

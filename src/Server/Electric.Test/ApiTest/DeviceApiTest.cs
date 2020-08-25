@@ -1,5 +1,4 @@
-﻿using CommonShare.Enums;
-using Electric.Application.Responses;
+﻿using Electric.Application.Responses;
 using Electric.Core.Entities;
 using Newtonsoft.Json;
 using System;
@@ -75,17 +74,11 @@ namespace Electric.Test.ApiTest
 
         private string BuildElectricRequest(string seriaNumber)
         {
-            var electric = new Device
+            var electric = new ElectricMetter
             {
                 FirmwareVersion = "3434",
                 SeriaNumber = seriaNumber,
-                GateWay = new GateWay
-                {
-                    IP = "192.55.55.5",
-                    Port = 2222,
-                },
                 State = "New",
-                Type = (int)ElectricType.GateWay
             };
 
             return JsonConvert.SerializeObject(electric);

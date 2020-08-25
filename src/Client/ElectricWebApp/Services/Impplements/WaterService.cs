@@ -5,35 +5,22 @@ using ElectricWebApp.Settings;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ElectricWebApp.Services.Impplements
 {
-    public class DeviceService : BaseHttpClientWithFactory, IDeviceService
+    public class WaterService : BaseHttpClientWithFactory,IWaterService
     {
         private readonly IApiSettings _settings;
-        private readonly ILogger<DeviceService> _logger;
+        private readonly ILogger<ElectricService> _logger;
 
-        public DeviceService(IHttpClientFactory factory, IApiSettings settings, ILogger<DeviceService> logger)
+        public WaterService(IHttpClientFactory factory, IApiSettings settings, ILogger<ElectricService> logger)
             : base(factory)
         {
             _settings = settings;
             _logger = logger;
-        }
-
-        public async Task<IEnumerable<DeviceViewModel>> GetAll()
-        {
-            _logger.LogInformation($"Processing Get All Devices");
-
-            var message = new HttpRequestBuilder(_settings.BaseAddress)
-                                .SetPath(_settings.DevicePath)
-                                .HttpMethod(HttpMethod.Get)
-                                .GetHttpMessage();
-
-            return await SendRequest<IEnumerable<DeviceViewModel>>(message);
         }
 
         public async Task<DeviceViewModel> GetDetail(string id)
@@ -41,7 +28,7 @@ namespace ElectricWebApp.Services.Impplements
             _logger.LogInformation($"Processing Get Detail Device");
 
             var message = new HttpRequestBuilder(_settings.BaseAddress)
-                                .SetPath(_settings.DevicePath)
+                                .SetPath(_settings.WaterPath)
                                 .AddToPath(id)
                                 .HttpMethod(HttpMethod.Get)
                                 .GetHttpMessage();
@@ -56,7 +43,7 @@ namespace ElectricWebApp.Services.Impplements
                 _logger.LogInformation($"Processing Create Device");
 
                 var message = new HttpRequestBuilder(_settings.BaseAddress)
-                                .SetPath(_settings.DevicePath)
+                                .SetPath(_settings.WaterPath)
                                 .HttpMethod(HttpMethod.Post)
                                 .GetHttpMessage();
 
@@ -71,26 +58,11 @@ namespace ElectricWebApp.Services.Impplements
                 if (ex.Message.Contains("409"))
                 {
                     _logger.LogError($"Duplicated Item Error: {ex.Message}");
-                    return new ResponseDataModel<string> { Data = null, ErrorMessage = "Duplicated Record Found"};
+                    return new ResponseDataModel<string> { Data = null, ErrorMessage = "Duplicated Record Found" };
                 }
-               
+
                 throw;
             }
-        }
-
-        public async Task<DeviceViewModel> Edit(DeviceViewModel electricModel)
-        {
-            _logger.LogInformation($"Processing Update Device");
-
-            var message = new HttpRequestBuilder(_settings.BaseAddress)
-                                .SetPath(_settings.DevicePath)
-                                .HttpMethod(HttpMethod.Put)
-                                .GetHttpMessage();
-
-            var json = JsonConvert.SerializeObject(electricModel);
-            message.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            return await SendRequest<DeviceViewModel>(message);
         }
 
         public async Task<ResponseDataModel<string>> Delete(string id)
@@ -98,12 +70,27 @@ namespace ElectricWebApp.Services.Impplements
             _logger.LogInformation($"Processing Delete Device");
 
             var message = new HttpRequestBuilder(_settings.BaseAddress)
-                               .SetPath(_settings.DevicePath)
+                               .SetPath(_settings.WaterPath)
                                .AddToPath(id)
                                .HttpMethod(HttpMethod.Delete)
                                .GetHttpMessage();
 
             return await SendRequest<ResponseDataModel<string>>(message);
+        }
+
+        public async Task<object> Edit(DeviceViewModel electricModel)
+        {
+            _logger.LogInformation($"Processing Update Device");
+
+            var message = new HttpRequestBuilder(_settings.BaseAddress)
+                                .SetPath(_settings.WaterPath)
+                                .HttpMethod(HttpMethod.Put)
+                                .GetHttpMessage();
+
+            var json = JsonConvert.SerializeObject(electricModel);
+            message.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            return await SendRequest<object>(message);
         }
     }
 }

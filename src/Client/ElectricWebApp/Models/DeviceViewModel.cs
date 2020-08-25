@@ -16,7 +16,17 @@ namespace ElectricWebApp.Models
         public string FirmwareVersion { get; set; }
         [Display(Name = "State")]
         public string State { get; set; }
-        public GateWayViewModel GateWay { get; set; }
+        [Display(Name = "IP")]
+        public string IP { get; set; }
+        [Display(Name = "Port")]
+        public int? Port { get; set; }
+        public string PortTitle
+        {
+            get
+            {
+                return !Port.HasValue || Port.Value == 0 ? "" : Port.Value.ToString();
+            }
+        }
         public int Type { get; set; }
         public string TypeName
         {
@@ -39,10 +49,5 @@ namespace ElectricWebApp.Models
               new SelectListItem { Value = "1", Text = "Water metter" },
               new SelectListItem { Value = "2", Text = "Gateways" },
            };
-
-        public DeviceViewModel()
-        {
-            GateWay = new GateWayViewModel();
-        }
     }
 }
