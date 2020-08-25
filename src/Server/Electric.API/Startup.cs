@@ -58,7 +58,7 @@ namespace Electric.API
             services.AddAutoMapper(typeof(Startup));
 
             // Add Repository
-            services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+            services.AddTransient(typeof(IMongoRepository<>), typeof(MongoRepository<>));
             services.AddTransient<IDeviceQuery, DeviceQuery>();
 
             // Add MediatR
