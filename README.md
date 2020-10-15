@@ -1,5 +1,5 @@
 # Electric System Demo
-An assignment demo of CMC for entry testing.
+An  demo CRUD by use Net core and mongo db.
 ## Run The Project
 You will need the following tools:
 
