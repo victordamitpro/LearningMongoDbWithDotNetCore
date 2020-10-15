@@ -1,5 +1,5 @@
 # Electric System Demo
-An  demo CRUD by use Net core and mongo db.
+An  demo CRUD by using Net core and mongo db.
 ## Run The Project
 You will need the following tools:
 
