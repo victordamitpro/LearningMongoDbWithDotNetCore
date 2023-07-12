@@ -29,6 +29,6 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up –d
 3. Design Pattern: Repository, CQRS, DI , SOLID, Clean Architecture Design
 3. Deloyment: Docker Compose
 ### Next Release
-1. Apply Intergration Test
+1. Intergration Test
 2. Implement Logging/Mornitoring System
 3. Intergration of Message Bus(RabbitMQ)
